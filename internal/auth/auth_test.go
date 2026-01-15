@@ -13,7 +13,7 @@ func TestGetAPIKey(t *testing.T) {
 
 	result, err := GetAPIKey(testHeaders)
 
-	if err == nil || result != expected {
+	if err != nil || result != expected {
 		t.Fatalf("Expected: %s, got: %s, error: %v", expected, result, err)
 	}
 }
