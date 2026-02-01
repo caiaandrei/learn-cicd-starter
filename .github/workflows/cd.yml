@@ -5,8 +5,8 @@ on:
     branches: [main]
 
 jobs:
-    deploy:
-        name: Deploy
+    buildprod:
+        name: Build prod
         runs-on: ubuntu-latest
 
         steps:
@@ -18,3 +18,17 @@ jobs:
                 go-version: "1.25.1"
             - name: Build app
               run: scripts/buildprod.sh
+
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v3'
+
+            - name: 'Use gcloud CLI'
+              run: 'gcloud info'
+            
+            - name: 'Build docker image'
+              run: 'gcloud builds submit --tag us-central1-docker.pkg.dev/notely-486120/notely-ar-repo/notely:latest .'
